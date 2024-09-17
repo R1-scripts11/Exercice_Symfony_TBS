@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Liste des Souscriptions</title>
+</head>
+<body>
+    <h1>Liste des Souscriptions</h1>
+    {% if subscriptions is empty %}
+        <p>Aucune souscription trouvée.</p>
+    {% else %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Contact</th>
+                    <th>Produit</th>
+                    <th>Date de début</th>
+                    <th>Date de fin</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subscription in subscriptions %}
+                    <tr>
+                        <td>{{ subscription.id }}</td>
+                        <td>{{ subscription.contact.name }}</td>
+                        <td>{{ subscription.product.name }}</td>
+                        <td>{{ subscription.beginDate|date('Y-m-d') }}</td>
+                        <td>{{ subscription.endDate|date('Y-m-d') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>
