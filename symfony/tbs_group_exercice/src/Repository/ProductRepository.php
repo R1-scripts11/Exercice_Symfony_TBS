@@ -21,7 +21,6 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    // Méthode personnalisée pour trouver les produits par label
     public function findByLabel(string $label): array
     {
         return $this->createQueryBuilder('p')
@@ -31,5 +30,4 @@ class ProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // Ajoutez d'autres méthodes personnalisées si nécessaire
 }

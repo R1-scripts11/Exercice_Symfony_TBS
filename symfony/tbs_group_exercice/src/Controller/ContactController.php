@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
 {
-    // GET /contact/{id} - Récupérer un contact par son ID
+    // GET /contact/{id}
     #[Route('/contact/{id}', name: 'get_contact', methods: ['GET'])]
     public function getContact(int $id, ContactRepository $contactRepository): JsonResponse
     {
@@ -26,14 +26,11 @@ class ContactController extends AbstractController
         return $this->json($contact, Response::HTTP_OK);
     }
 
-    // GET /contact - Récupérer tous les contacts et afficher un formulaire pour en ajouter
+    // GET /contact 
     #[Route('/contact', name: 'get_all_contacts', methods: ['GET'])]
     public function getAllContacts(ContactRepository $contactRepository): Response
     {
-        // Fetch all contacts
         $contacts = $contactRepository->findAll();
-
-        // Start building the HTML output
         $html = '<!DOCTYPE html>
         <html>
         <head>
@@ -42,19 +39,16 @@ class ContactController extends AbstractController
         <body>
             <h1>Liste des Contacts</h1>';
 
-        // Check if there are contacts
         if (empty($contacts)) {
             $html .= '<p>Aucun contact trouvé.</p>';
         } else {
             $html .= '<ul>';
-            // Loop through the contacts and create list items
             foreach ($contacts as $contact) {
                 $html .= '<li>ID: ' . htmlspecialchars($contact->getId()) . ' - ' . htmlspecialchars($contact->getName()) . ' ' . htmlspecialchars($contact->getFirstname()) . '</li>';
             }
             $html .= '</ul>';
         }
 
-        // Add a form to create a new contact
         $html .= '<h2>Ajouter un Nouveau Contact</h2>
                   <form action="/contact" method="post">
                       <label for="name">Nom:</label>
@@ -68,8 +62,6 @@ class ContactController extends AbstractController
 
         $html .= '</body>
         </html>';
-
-        // Return the HTML response
         return new Response($html);
     }
 
@@ -77,7 +69,7 @@ class ContactController extends AbstractController
     #[Route('/contact', name: 'create_contact', methods: ['POST'])]
     public function createContact(Request $request, EntityManagerInterface $em): Response
     {
-        // Get data from the form
+        // data du form
         $data = $request->request->all();
 
         $contact = new Contact();
@@ -86,12 +78,10 @@ class ContactController extends AbstractController
 
         $em->persist($contact);
         $em->flush();
-
-        // Redirect to the /contact page after creation
         return $this->redirectToRoute('get_all_contacts');
     }
 
-    // PUT /contact/{id} - Mettre à jour un contact
+    // PUT /contact/{id}
     #[Route('/contact/{id}', name: 'update_contact', methods: ['PUT'])]
     public function updateContact(int $id, Request $request, EntityManagerInterface $em, ContactRepository $contactRepository): JsonResponse
     {
@@ -115,7 +105,7 @@ class ContactController extends AbstractController
         return $this->json($contact, Response::HTTP_OK);
     }
 
-    // DELETE /contact/{id} - Supprimer un contact
+    // DELETE /contact/{id}
     #[Route('/contact/{id}', name: 'delete_contact', methods: ['DELETE'])]
     public function deleteContact(int $id, EntityManagerInterface $em, ContactRepository $contactRepository): JsonResponse
     {

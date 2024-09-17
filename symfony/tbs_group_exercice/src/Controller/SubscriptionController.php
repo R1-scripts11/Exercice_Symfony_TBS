@@ -19,12 +19,10 @@ class SubscriptionController extends AbstractController
     #[Route('/', name: 'get_all_subscriptions', methods: ['GET'])]
     public function getAllSubscriptions(SubscriptionRepository $subscriptionRepository, ContactRepository $contactRepository, ProductRepository $productRepository): Response
     {
-        // Fetch all subscriptions, contacts, and products
         $subscriptions = $subscriptionRepository->findAll();
         $contacts = $contactRepository->findAll();
         $products = $productRepository->findAll();
 
-        // Start building the HTML output
         $html = '<!DOCTYPE html>
         <html>
         <head>
@@ -50,7 +48,6 @@ class SubscriptionController extends AbstractController
         <body>
             <h1>Liste des Souscriptions</h1>';
 
-        // Check if there are subscriptions
         if (empty($subscriptions)) {
             $html .= '<p>Aucune souscription trouvée.</p>';
         } else {
@@ -69,7 +66,6 @@ class SubscriptionController extends AbstractController
                                 </thead>
                                 <tbody>';
 
-            // Loop through the subscriptions and create table rows
             foreach ($subscriptions as $subscription) {
                 $contactName = $subscription->getContact() ? $subscription->getContact()->getName() : 'N/A';
                 $productName = $subscription->getProduct() ? $subscription->getProduct()->getId() : 'N/A';
@@ -142,9 +138,8 @@ class SubscriptionController extends AbstractController
                         <button type="button">Ajouter produit</button>
                 </a>
             </div>
-        </div>'; // Close the table container
+        </div>';
 
-        // Add a form to create a new subscription
         $html .= '<h2>Ajouter une Nouvelle Souscription</h2>
                 <form action="/subscription" method="post">
                     <label for="contact_id">Contact ID:</label>
@@ -165,10 +160,9 @@ class SubscriptionController extends AbstractController
         $html .= '</body>
         </html>';
 
-        // Return the HTML response
         return new Response($html);
     }
-    // GET /subscription/{idContact} - Récupérer les souscriptions d'un contact
+
     #[Route('/subscription/{idContact}', name: 'get_subscriptions_by_contact', methods: ['GET'])]
     public function getSubscriptionsByContact(int $idContact, SubscriptionRepository $subscriptionRepository): JsonResponse
     {
@@ -181,7 +175,7 @@ class SubscriptionController extends AbstractController
         return $this->json($subscriptions, Response::HTTP_OK);
     }
 
-// POST /subscription - Créer une nouvelle souscription
+// POST 
 #[Route('/subscription', name: 'create_subscription', methods: ['POST'])]
 public function createSubscription(
     Request $request, 
@@ -189,10 +183,7 @@ public function createSubscription(
     ContactRepository $contactRepository, 
     ProductRepository $productRepository
 ): Response {
-    // Get form data instead of JSON
     $data = $request->request->all();
-
-    // Validate form data
     if (!isset($data['contact_id'], $data['product_id'], $data['beginDate'], $data['endDate'])) {
         return $this->json(['error' => 'Invalid input data. Please provide contact_id, product_id, beginDate, and endDate.'], Response::HTTP_BAD_REQUEST);
     }
@@ -204,22 +195,19 @@ public function createSubscription(
         return $this->json(['error' => 'Invalid contact or product'], Response::HTTP_BAD_REQUEST);
     }
 
-    // Create and set up the subscription
     $subscription = new Subscription();
     $subscription->setContact($contact);
     $subscription->setProduct($product);
     $subscription->setBeginDate(new \DateTime($data['beginDate']));
     $subscription->setEndDate(new \DateTime($data['endDate']));
 
-    // Persist and flush to save the subscription
     $em->persist($subscription);
     $em->flush();
 
-    // Redirect to the main page after successful creation
     return $this->redirectToRoute('get_all_subscriptions');
 }
 
-    // PUT /subscription/{idSubscription} - Mettre à jour une souscription
+    // PUT /subscription/{idSubscription} 
     #[Route('/subscription/{idSubscription}', name: 'update_subscription', methods: ['PUT'])]
     public function updateSubscription(
         int $idSubscription, 

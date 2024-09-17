@@ -21,7 +21,6 @@ class SubscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Subscription::class);
     }
 
-    // Méthode customisée trouver les souscriptions par date de début
     public function findByBeginDate(\DateTime $beginDate): array
     {
         return $this->createQueryBuilder('s')
@@ -31,7 +30,6 @@ class SubscriptionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // Méthode customisée pour trouver les souscriptions actives
     public function findActiveSubscriptions(): array
     {
         $now = new \DateTime();

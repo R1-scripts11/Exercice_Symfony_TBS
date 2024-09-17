@@ -20,8 +20,6 @@ class ContactRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Contact::class);
     }
-
-    // Méthode personnalisée pour trouver les contacts par nom
     public function findByName(string $name): array
     {
         return $this->createQueryBuilder('c')
@@ -31,5 +29,4 @@ class ContactRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // Ajoutez d'autres méthodes personnalisées si nécessaire
 }
