@@ -2,7 +2,8 @@
 
 Ce projet configure un environnement Docker pour exécuter une application Symfony avec MySQL, PHP-FPM, et Nginx.
 ### 1. Extraire les Fichiers
-https://we.tl/t-fIwqzzOfWF
+fichiers : https://we.tl/t-fIwqzzOfWF
+
 Assurez-vous d'extraire les fichiers `symfony_stack_images.tar` et `mysql_data.tar` si ce n'est pas déjà fait.
 
 ### 2. Charger les Images Docker
